@@ -8,7 +8,6 @@ local Window = UI:CreateWindow({
     ShowWindow = true
 })
 
--- ===== ANTI LAG MODULE =====
 local Antilag = {}
 local antilagEnabled = false
 local antilagMaterials = {}
@@ -64,7 +63,6 @@ function Antilag:Disable()
     self:Restore()
 end
 
--- ===== SETUP GLOBAL VARIABLES =====
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -78,7 +76,6 @@ local Balls = workspace:FindFirstChild("Balls")
 local TrainingBalls = workspace:FindFirstChild("TrainingBalls")
 local pg = LocalPlayer:WaitForChild("PlayerGui")
 
--- Shared state
 local revertedRemotes = {}
 local hasData = false
 local serverFireCounter = 0
@@ -118,7 +115,6 @@ Sys = {
     __first_parry_done = false
 }
 
--- ===== REMOTE CAPTURE =====
 local function isValidArgs(a)
     return #a == 7 and type(a[2]) == "string" and type(a[3]) == "number" and typeof(a[4]) == "CFrame" and type(a[5]) == "table" and type(a[6]) == "table" and type(a[7]) == "boolean"
 end
@@ -145,7 +141,6 @@ task.spawn(function()
     end)
 end)
 
--- ===== HELPER FUNCTIONS =====
 local function riverGetBall()
     local balls = workspace:FindFirstChild("Balls")
     if not balls then return nil end
@@ -273,9 +268,6 @@ local doFire = function()
     end
 end
 
--- =====================================================
--- AUTO PARRY
--- =====================================================
 local autoParryEnabled = false
 local autoParryConnection = nil
 
@@ -344,14 +336,10 @@ pcall(function() ReplicatedStorage.Remotes.DeathBall.OnClientEvent:Connect(funct
 pcall(function() ReplicatedStorage.Packages._Index["sleitnick_net@0.1.0"].net["RE/TimeHoleActivate"].OnClientEvent:Connect(function(...) local args = { ... }; local p = args[1]; if p == LocalPlayer or p == LocalPlayer.Name or (p and p.Name == LocalPlayer.Name) then Sys.__timehole_active = true end end) end)
 pcall(function() ReplicatedStorage.Packages._Index["sleitnick_net@0.1.0"].net["RE/TimeHoleDeactivate"].OnClientEvent:Connect(function() Sys.__timehole_active = false end) end)
 
--- =====================================================
--- COMBINED AUTO PARRY + SPAM PARRY LOOP
--- =====================================================
 local parriedBalls = {}
 
 local function CombinedParryLoop()
-    -- AUTO PARRY PART
-    if autoParryEnabled and LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
+        if autoParryEnabled and LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
         local balls = riverGetBalls()
         local trainingBall = nil
         if TrainingBalls then for _, v in ipairs(TrainingBalls:GetChildren()) do if v:GetAttribute("realBall") then trainingBall = v; break end end end
@@ -407,8 +395,7 @@ local function CombinedParryLoop()
             end
         end
 
-        -- Training ball AP
-        if trainingBall then
+                if trainingBall then
             local tz = trainingBall:FindFirstChild("zoomies")
             if tz then
                 local tbId = trainingBall:GetDebugId()
@@ -426,8 +413,7 @@ local function CombinedParryLoop()
         end
     end
 
-    -- SPAM PARRY PART
-    if autoParryEnabled and LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
+        if autoParryEnabled and LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
         if not Alive or LocalPlayer.Character.Parent ~= Alive then return end
 
         local now = tick()
@@ -478,7 +464,6 @@ local function SetAutoParryConnection()
     if autoParryEnabled then autoParryConnection = RunService.RenderStepped:Connect(CombinedParryLoop) end
 end
 
--- Lobby Spam
 local lobbySpamEnabled = false
 RunService.Heartbeat:Connect(function()
     pcall(function()
@@ -495,9 +480,6 @@ RunService.Heartbeat:Connect(function()
     end)
 end)
 
--- =====================================================
--- MANUAL SPAM PARRY MODULE
--- =====================================================
 local manualSpamRunning = false
 local manualSpamConnection = nil
 local manualSpamUIGui = nil
@@ -566,7 +548,6 @@ function ManualSpam:AnimationFix()
     end
 end
 
--- Create Mobile UI Button
 local function CreateManualSpamUI()
     if manualSpamUIGui then return end
 
@@ -581,7 +562,7 @@ local function CreateManualSpamUI()
     frame.Name = "MainFrame"
     frame.Position = UDim2.new(0, 20 * scale, 0, 20 * scale)
     frame.Size = UDim2.new(0, 200 * scale, 0, 100 * scale)
-    frame.BackgroundColor3 = Color3.fromRGB(255, 150, 150)
+    frame.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
     frame.BackgroundTransparency = 0.1
     frame.BorderSizePixel = 0
     frame.Active = true
@@ -594,7 +575,7 @@ local function CreateManualSpamUI()
 
     local uiStroke = Instance.new("UIStroke")
     uiStroke.Thickness = 2 * scale
-    uiStroke.Color = Color3.new(255, 0, 0)
+    uiStroke.Color = Color3.fromRGB(255, 105, 180)
     uiStroke.Parent = frame
 
     local button = Instance.new("TextButton")
@@ -605,7 +586,7 @@ local function CreateManualSpamUI()
     button.BackgroundTransparency = 1
     button.BorderSizePixel = 0
     button.Font = Enum.Font.GothamSemibold
-    button.TextColor3 = Color3.new(200, 200, 200)
+    button.TextColor3 = Color3.fromRGB(255, 105, 180)
     button.TextSize = 25 * scale
     button.Parent = frame
 
@@ -639,7 +620,7 @@ CombatTab:Section({ Title = "ANTI LAG" })
 
 CombatTab:Toggle({
     Title = "Anti Lag",
-    Desc = "Reduces lag by removing visual effects",
+    Desc = "fix lag",
     Icon = "zap",
     Type = "Switch",
     Value = false,
@@ -650,7 +631,7 @@ CombatTab:Section({ Title = "AUTO PARRY" })
 
 CombatTab:Toggle({
     Title = "Auto Parry",
-    Desc = "Automatically parries ball + spam when enemy close",
+    Desc = "KITTYLOL PARRY",
     Icon = "shield",
     Type = "Switch",
     Value = false,
@@ -663,8 +644,8 @@ CombatTab:Toggle({
 CombatTab:Section({ Title = "MANUAL SPAM" })
 
 CombatTab:Toggle({
-    Title = "Mobile Button",
-    Desc = "Creates spam button on screen",
+    Title = "Manual Spam",
+    Desc = "SPAM",
     Icon = "smartphone",
     Type = "Switch",
     Value = false,
@@ -726,4 +707,4 @@ CombatTab:Toggle({
 
 CombatTab:Label({ Text = "" })
 
-print("[HackerAI] Loaded! | Auto + Spam + Manual Spam")
+print

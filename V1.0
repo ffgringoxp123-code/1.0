@@ -620,7 +620,7 @@ CombatTab:Section({ Title = "ANTI LAG" })
 
 CombatTab:Toggle({
     Title = "Anti Lag",
-    Desc = "fix lag",
+    Desc = "Kittylol antilag",
     Icon = "zap",
     Type = "Switch",
     Value = false,
@@ -631,7 +631,7 @@ CombatTab:Section({ Title = "AUTO PARRY" })
 
 CombatTab:Toggle({
     Title = "Auto Parry",
-    Desc = "KITTYLOL PARRY",
+    Desc = "Kittylol autoparry",
     Icon = "shield",
     Type = "Switch",
     Value = false,
@@ -645,7 +645,7 @@ CombatTab:Section({ Title = "MANUAL SPAM" })
 
 CombatTab:Toggle({
     Title = "Manual Spam",
-    Desc = "SPAM",
+    Desc = "Kittylol spam",
     Icon = "smartphone",
     Type = "Switch",
     Value = false,
@@ -656,29 +656,6 @@ CombatTab:Toggle({
             DestroyManualSpamUI()
             ManualSpam:Stop()
         end
-    end
-})
-
-CombatTab:Toggle({
-    Title = "PC (E Key)",
-    Desc = "Press E to toggle spam",
-    Icon = "keyboard",
-    Type = "Switch",
-    Value = false,
-    Callback = function(enabled)
-        if pcSpamConnection then
-            pcSpamConnection:Disconnect()
-            pcSpamConnection = nil
-        end
-        if not enabled then
-            ManualSpam:Stop()
-            return
-        end
-        pcSpamConnection = UserInputService.InputBegan:Connect(function(input, gp)
-            if not gp and input.KeyCode == Enum.KeyCode.E then
-                if manualSpamRunning then ManualSpam:Stop() else ManualSpam:Start() end
-            end
-        end)
     end
 })
 
@@ -707,4 +684,5 @@ CombatTab:Toggle({
 
 CombatTab:Label({ Text = "" })
 
-print
+print("[HackerAI] Loaded! | Auto + Spam + Manual Spam")
+
